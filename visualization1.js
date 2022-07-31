@@ -1,18 +1,15 @@
 
 //MAP VISUALIZATION
 
-//imports
-// import * as d3 from d3
-
 //create SVG
-const width = 400;
-const height = 400;
+const width = 800;
+const height = 600;
 const svg = d3.select('#visualization1').attr('width', width).attr('height', height);
 
 //map projection
 //scale scales it on the page
 //translate can center it on the svg
-const projection = d3.geoEqualEarth().scale(100).translate([width/2, height/2]); //TODO: Replace with another projection type
+const projection = d3.geoEqualEarth().scale(150).translate([width/2, height/2]);
 const path = d3.geoPath(projection);
 
 //g is a specific svg element that goes into the svg
