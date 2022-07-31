@@ -16,7 +16,7 @@ const path = d3.geoPath(projection);
 //g is what the group is called inside of an svg
 const countries_group = svg.append('g');
 
-d3.json('countries-110m.json').then(data => {
+d3.json('countries-110m.json').then((data) => {
     // if you have topojson instead of geojason
     const countries = topojson.feature(data, data.objects.countries);
     console.log(countries);
@@ -27,7 +27,17 @@ d3.json('countries-110m.json').then(data => {
         .enter()
         .append('path')
         .attr('class', 'country')
+        //d is the string that draws the outline, is how you tell the svg to draw the path
         .attr('d', path)
-        // .attr('fill', (d) => d.properties.name === 'United States of America' ? '#000000' : '#FF0000')
+        .attr('stroke-width', 1)
+        .on('mouseover', function (d, i) {
+            d3.select(this).attr('stroke-width', 3);
+        })
+        .on('mouseout', function (d, i) {
+            d3.select(this).attr('stroke-width', 1);
+        })
         ;
-});
+} );
+
+
+
