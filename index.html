@@ -3,12 +3,12 @@
 <html lang="en">
 
     <head>
+        <link rel="stylesheet" href="styles.css">
         <title>World Wine Production 1961-2014</title>
 
         <!-- link directly to latest D3 release: -->
         <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="visualization1.js"></script> 
-        <script src="visualization2.js"></script> 
+        <script src="https://unpkg.com/topojson@3"></script>
       </head>
 
     <body>
@@ -16,6 +16,9 @@
         <!-- view1 and view2 are to represent different linked views of the data -->
         <svg id="visualization1"></svg>
         <svg id="visualization2"></svg>
+        
+        <script src="visualization1.js"></script> 
+        <script src="visualization2.js"></script> 
     </body>
 
 </html>
