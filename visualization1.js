@@ -21,16 +21,23 @@ async function buildVis1() {
     //Import wine data.
     //Await is a keyword that will make the rest of the code await execution while
     //the data is loading.
-    const wine_data = await d3.csv('wine-production.csv');
+    const wine_production = await d3.csv('wine-production.csv');
+    //Gives an array of all the tonnes amounts 
+    const tonnes = wine_production.map((row) => parseInt(row.tonnes));
+    // ... spreads the array to get the number we want
+    const max_tonnes = Math.max(...tonnes);
+    const min_tonnes = Math.min(...tonnes);
 
-    //creates a sequential discrete nine-color scale (using Red-Purple).
+    //Creates a sequential discrete nine-color scale (using Red-Purple).
     //Given a number t in the range [0,1], returns the corresponding color
     //from the “RdPu” sequential color scheme represented as an RGB string.
-    var color_sequential = d3.scaleOrdinal(d3.schemeRdPu[9]);
+    //domain is the min and max range of data.
+    var color_sequential = d3.scaleSequential(d3.interpolateRdPu)
+        .domain([min_tonnes, max_tonnes]);
 
-    const countries_data = await d3.json('countries-110m.json')
+    const countries_data = await d3.json('countries-110m.json');
 
-    // if you have topojson instead of geojason
+    //If you have topojson instead of geojason
     const countries = topojson.feature(countries_data, countries_data.objects.countries);
 
     countries_group
@@ -39,16 +46,28 @@ async function buildVis1() {
         .enter()
         .append('path')
         .attr('class', 'country')
-        //d is the string that draws the outline, is how you tell the svg to draw the path
+        //here d is an html attribute that is the string that draws the outline,
+        //is how you tell the svg to draw the path
         .attr('d', path)
+        //fill color
+        //here d is a param that is the data item that represents the country
+        .attr('fill', function (d, i) {
+            const country_name = d.properties.name;
+            const total_production = wine_production
+                .filter((row) => row.Entity === country_name)
+                .map((row) => parseInt(row.tonnes))
+                .reduce((acc, a) => acc + a, 0);
+            
+            return color_sequential(total_production);
+        })
         .attr('stroke-width', 1)
+        .attr('stroke', '#999999')
         .on('mouseover', function (d, i) {
             d3.select(this).attr('stroke-width', 3);
         })
         .on('mouseout', function (d, i) {
             d3.select(this).attr('stroke-width', 1);
-        })
-        ;
+        });
     ;
 }
 
