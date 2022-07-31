@@ -31,5 +31,6 @@ d3.json('countries-110m.json').then(data => {
         .append('path')
         .attr('class', 'country')
         .attr('d', path)
-        .attr('fill', (d) => d.properties.name === 'United States of America' ? '#000000' : '#FF0000');
+        // .attr('fill', (d) => d.properties.name === 'United States of America' ? '#000000' : '#FF0000')
+        ;
 });
