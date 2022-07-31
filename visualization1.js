@@ -16,6 +16,11 @@ const path = d3.geoPath(projection);
 //g is what the group is called inside of an svg
 const countries_group = svg.append('g');
 
+//creates a sequential discrete nine-color scale (using Red-Purple).
+//Given a number t in the range [0,1], returns the corresponding color
+//from the “RdPu” sequential color scheme represented as an RGB string.
+var color_sequential = d3.scaleOrdinal(d3.schemeRdPu[9]);
+
 d3.json('countries-110m.json').then((data) => {
     // if you have topojson instead of geojason
     const countries = topojson.feature(data, data.objects.countries);

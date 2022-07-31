@@ -16,9 +16,20 @@
         <!-- view1 and view2 are to represent different linked views of the data -->
         <svg id="visualization1"></svg>
         <svg id="visualization2"></svg>
-        
+
         <script src="visualization1.js"></script> 
         <script src="visualization2.js"></script> 
+
+        <!-- import d3-scale-chromatic from Skypack -->
+        <script type="module">
+
+            import {interpolateYlGn} from "https://cdn.skypack.dev/d3-scale-chromatic@3";
+            
+            const yellow = interpolateYlGn(0); // "rgb(255, 255, 229)"
+            const yellowGreen = interpolateYlGn(0.5); // "rgb(120, 197, 120)"
+            const green = interpolateYlGn(1); // "rgb(0, 69, 41)"
+            
+            </script>
     </body>
 
 </html>
