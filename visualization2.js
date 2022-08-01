@@ -8,12 +8,14 @@ async function buildVis2(country_name) {
     d3.select("#visualization2").html('');
 
     // set the dimensions and margins of the graph
+    var width = 460;
+    var height = 200;
     var margin = {top: 10, right: 30, bottom: 30, left: 60},
-        width = 460 - margin.left - margin.right,
-        height = 200 - margin.top - margin.bottom;
+        width = width - margin.left - margin.right,
+        height = height - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
-    const mini_map = d3.select("#visualization2")
+    const mini_graph = d3.select("#visualization2")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
@@ -30,26 +32,29 @@ async function buildVis2(country_name) {
 
     // Add X axis --> it is a date format
     const x = d3.scaleLinear()
-    // TODO : CHANGE FORMAT OF YEAR ON X AXIS
         .domain([1961,2014])
         .range([ 0, width ]);
 
-    mini_map.append("g")
+    //add format for years on x axis
+    var x_axis = d3.axisBottom().scale(x)
+        .tickFormat(d3.format('.0f'));
+
+    mini_graph.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(x_axis);
 
     // Add Y axis
     const y = d3.scaleLinear()
         .domain([min_tonnes, max_tonnes])
         .range([ height, 0 ]);
     
-    mini_map.append("g").call(d3.axisLeft(y));
+    mini_graph.append("g").call(d3.axisLeft(y));
 
     // This allows to find the closest X index of the mouse:
-    const bisect = d3.bisector(function(d) { return d.x; }).left;
+    const bisect = d3.bisector(function(d) { return d.x_axis; }).left;
 
     // Create the circle that travels along the curve of chart
-    var focus = mini_map
+    var focus = mini_graph
         .append('g')
         .append('circle')
             .style("fill", "none")
@@ -58,7 +63,7 @@ async function buildVis2(country_name) {
             .style("opacity", 0)
 
     // Create the text that travels along the curve of chart
-    var focusText = mini_map
+    var focusText = mini_graph
         .append('g')
         .append('text')
             .style("opacity", 0)
@@ -66,7 +71,7 @@ async function buildVis2(country_name) {
             .attr("alignment-baseline", "middle")
 
     // Add the line
-    mini_map.append("path")
+    mini_graph.append("path")
         .datum(world_wine_production)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
@@ -75,16 +80,6 @@ async function buildVis2(country_name) {
             .x(function(d) { return x(d.Year) })
             .y(function(d) { return y(d.tonnes) })
         )
-
-    // Create a rect on top of the svg area: this rectangle recovers mouse position
-    mini_map.append('rect')
-        .style("fill", "none")
-        .style("pointer-events", "all")
-        .attr('width', width)
-        .attr('height', height)
-        .on('mouseover', mouseover)
-        .on('mousemove', mousemove)
-        .on('mouseout', mouseout);
 
     // What happens when the mouse move -> show the annotations at the right positions.
     function mouseover() {
@@ -98,18 +93,28 @@ async function buildVis2(country_name) {
         var i = bisect(wine_production, x0, 1);
         selectedData = wine_production[i]
         focus
-          .attr("cx", x(selectedData.x))
-          .attr("cy", y(selectedData.y))
+            .attr("cx", x(selectedData.x))
+            .attr("cy", y(selectedData.y))
         focusText
-          .html("x:" + selectedData.x + "  -  " + "y:" + selectedData.y)
-          .attr("x", x(selectedData.x)+15)
-          .attr("y", y(selectedData.y))
+            .html("x:" + selectedData.x + "  -  " + "y:" + selectedData.y)
+            .attr("x", x(selectedData.x)+15)
+            .attr("y", y(selectedData.y))
     }
 
     function mouseout() {
         focus.style("opacity", 0)
         focusText.style("opacity", 0)
     }
+
+    // Create a rect on top of the svg area: this rectangle recovers mouse position
+    mini_graph.append('rect')
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .attr('width', width)
+        .attr('height', height)
+        .on('mouseover', mouseover)
+        .on('mousemove', mousemove)
+        .on('mouseout', mouseout);
 }
 
 buildVis2('World');
