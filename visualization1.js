@@ -5,13 +5,15 @@
 async function buildVis1() {
     //create SVG
     const width = 800;
-    const height = 600;
+    const height = 450;
+
+    // append the svg object to the body of the page
     const svg = d3.select('#visualization1').attr('width', width).attr('height', height);
 
     //map projection
     //scale scales it on the page
     //translate can center it on the svg
-    const projection = d3.geoEqualEarth().scale(150).translate([width/2, height/2]);
+    const projection = d3.geoEqualEarth().scale(150).translate([width/2, height/1.6]);
     const path = d3.geoPath(projection);
 
     //g is a specific svg element that goes into the svg
@@ -51,7 +53,7 @@ async function buildVis1() {
         .attr('d', path)
         //fill color
         //here d is a param that is the data item that represents the country
-        .attr('fill', function (d, i) {
+        .attr('fill', function (d) {
             const country_name = d.properties.name;
             const total_production = wine_production
                 .filter((row) => row.Entity === country_name)
@@ -62,11 +64,14 @@ async function buildVis1() {
         })
         .attr('stroke-width', 1)
         .attr('stroke', '#999999')
-        .on('mouseover', function (d, i) {
+        .on('mouseover', function (event, d) {
             d3.select(this).attr('stroke-width', 3);
+            console.log(d);
+            buildVis2(d.properties.name);
         })
-        .on('mouseout', function (d, i) {
+        .on('mouseout', function (event, d) {
             d3.select(this).attr('stroke-width', 1);
+            buildVis2('World');
         });
     ;
 }
