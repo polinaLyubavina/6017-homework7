@@ -3,12 +3,28 @@
 
 //This function will give an asyncronuous context for the await key words to work
 async function buildVis1() {
+
+    //click countries stick
+    let clicked_country = undefined;
+
     //create SVG
     const width = 800;
     const height = 450;
 
     // append the svg object to the body of the page
-    const svg = d3.select('#visualization1').attr('width', width).attr('height', height);
+    const svg = d3.select('#visualization1')
+        .attr('width', width)
+        .attr('height', height)
+        //unclicks/removes border from selected country when the background is clicked
+        .on('click', () => { 
+            countries_group
+                .selectAll('path')
+                .classed('clicked', false);
+
+            clicked_country = undefined;
+
+            buildVis2('World');
+        });
 
     //map projection
     //scale scales it on the page
@@ -64,15 +80,41 @@ async function buildVis1() {
         })
         .attr('stroke-width', 1)
         .attr('stroke', '#999999')
+        //mouse moves on country
         .on('mouseover', function (event, d) {
             d3.select(this).attr('stroke-width', 3);
-            console.log(d);
-            buildVis2(d.properties.name);
+            if (clicked_country === undefined) {
+                buildVis2(d.properties.name);
+            }
         })
+        //mouse moves off country
         .on('mouseout', function (event, d) {
             d3.select(this).attr('stroke-width', 1);
-            buildVis2('World');
-        });
+            if(clicked_country === undefined) {
+                buildVis2('World');
+            }
+        })
+        //mouse click
+        .on('click', function (event, d) {
+            //sets all countries to unclicked
+            countries_group
+                .selectAll('path')
+                .classed('clicked', false);
+
+            //click a country twice to unselect it
+            if (clicked_country === d.properties.name) {
+                clicked_country = undefined;
+            } else {
+                //track the clicks to unselect it if clicked twice
+                clicked_country = d.properties.name;
+                //rebuild mini graph
+                buildVis2(clicked_country);
+                //sets the css clicked class on
+                d3.select(this).classed('clicked', true);
+            }
+
+            event.stopPropagation();
+        })
     ;
 }
 

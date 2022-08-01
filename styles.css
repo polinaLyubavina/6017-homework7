@@ -1,3 +1,16 @@
 body {
     font-family: 'Libre Baskerville';
 }
+
+.clicked {
+    stroke-width: 3px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#visualization1 {
+    display: block;
+    margin: auto;
+}
