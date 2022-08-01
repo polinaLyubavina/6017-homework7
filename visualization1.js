@@ -8,7 +8,7 @@ async function buildVis1() {
     let clicked_country = undefined;
 
     //create SVG
-    const width = 800;
+    const width = 1000;
     const height = 450;
 
     // append the svg object to the body of the page
@@ -29,7 +29,7 @@ async function buildVis1() {
     //map projection
     //scale scales it on the page
     //translate can center it on the svg
-    const projection = d3.geoEqualEarth().scale(150).translate([width/2, height/1.6]);
+    const projection = d3.geoEqualEarth().scale(175).translate([width/2, height/1.6]);
     const path = d3.geoPath(projection);
 
     //g is a specific svg element that goes into the svg
