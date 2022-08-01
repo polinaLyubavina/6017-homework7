@@ -7,20 +7,30 @@ async function buildVis2(country_name) {
     // Clean up old vis
     d3.select("#visualization2").html('');
 
-    // set the dimensions and margins of the graph
+    // set the dimensions and margins of the mini graph
     var width = 650;
-    var height = 200;
-    var margin = {top: 10, right: 250, bottom: 30, left: 60},
+    var height = 250;
+    var margin = {top: 50, right: 250, bottom: 30, left: 60},
         width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
 
-    // append the svg object to the body of the page
+    // create the svg object to the body of the page
     const mini_graph = d3.select("#visualization2")
-            .attr("width", width + margin.left + margin.right)
+        .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+    mini_graph.append("text")
+            .attr("x", 15)
+            .attr("y", -15)
+            .style("font-size", "18px")
+            .style("font-weight", 700)
+            .text(country_name);
 
+    // //Add country name to graph
+    // const graph_title = d3.select("#graph-title")
+            
     //Import wine data
     const wine_production = await d3.csv('wine-production.csv');
     const country_wine_production = wine_production.filter((row) => row.Entity === country_name);
