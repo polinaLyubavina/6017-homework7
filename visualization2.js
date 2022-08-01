@@ -8,9 +8,9 @@ async function buildVis2(country_name) {
     d3.select("#visualization2").html('');
 
     // set the dimensions and margins of the graph
-    var width = 460;
+    var width = 650;
     var height = 200;
-    var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    var margin = {top: 10, right: 250, bottom: 30, left: 60},
         width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
 
@@ -23,7 +23,7 @@ async function buildVis2(country_name) {
 
     //Import wine data
     const wine_production = await d3.csv('wine-production.csv');
-    const world_wine_production = wine_production.filter((row) => row.Entity === country_name);
+    const country_wine_production = wine_production.filter((row) => row.Entity === country_name);
     //Gives an array of all the tonnes amounts 
     const tonnes = wine_production.map((row) => parseInt(row.tonnes));
     // ... spreads the array to get the number we want
@@ -72,7 +72,7 @@ async function buildVis2(country_name) {
 
     // Add the line
     mini_graph.append("path")
-        .datum(world_wine_production)
+        .datum(country_wine_production)
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
@@ -87,18 +87,17 @@ async function buildVis2(country_name) {
         focusText.style("opacity",1)
     }
 
-    function mousemove() {
+    function mousemove(event) {
         // recover coordinate we need
-        var x0 = x.invert(d3.mouse(this)[0]);
-        var i = bisect(wine_production, x0, 1);
-        selectedData = wine_production[i]
+        var hovered_year = Math.floor(x.invert(d3.pointer(event)[0]));
+        selectedData = country_wine_production.find((row) => parseInt(row.Year) === hovered_year)
         focus
-            .attr("cx", x(selectedData.x))
-            .attr("cy", y(selectedData.y))
+            .attr("cx", x(selectedData.Year))
+            .attr("cy", y(selectedData.tonnes))
         focusText
-            .html("x:" + selectedData.x + "  -  " + "y:" + selectedData.y)
-            .attr("x", x(selectedData.x)+15)
-            .attr("y", y(selectedData.y))
+            .html("Year:" + selectedData.Year + "  -  " + "tonnes:" + selectedData.tonnes)
+            .attr("x", x(selectedData.Year)+15)
+            .attr("y", y(selectedData.tonnes))
     }
 
     function mouseout() {
