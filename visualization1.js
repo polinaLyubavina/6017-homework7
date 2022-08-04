@@ -33,7 +33,7 @@ async function buildVis1() {
     //map projection
     //scale scales it on the page
     //translate can center it on the svg
-    const projection = d3.geoEqualEarth().scale(175).translate([width/2, height/1.6]);
+    const projection = d3.geoEqualEarth().scale(165).translate([width/2, height/1.6]);
     const path = d3.geoPath(projection);
 
     //g is a specific svg element that goes into the svg
@@ -54,13 +54,93 @@ async function buildVis1() {
     //Given a number t in the range [0,1], returns the corresponding color
     //from the “RdPu” sequential color scheme represented as an RGB string.
     //domain is the min and max range of data.
-    var color_sequential = d3.scaleSequential(d3.interpolateRdPu)
+    const color_sequential = d3.scaleSequential(d3.interpolateRdPu)
         .domain([min_tonnes, max_tonnes]);
-
+    
+    //import data to draw map
     const countries_data = await d3.json('countries-110m.json');
 
-    //If you have topojson instead of geojason
+    //If you have topojson instead of geojson.
+    //Topojson is just another form of json that can be used by d3 geojson, no additional libraries are required
     const countries = topojson.feature(countries_data, countries_data.objects.countries);
+
+
+
+    //----------------------------------------------------------//
+    // Legend
+
+    //Append a defs (for definition) element to your SVG
+    const defs = svg.append("defs");
+
+    //Add legend gradient
+    //Append a linearGradient element to the defs and give it a unique id
+    const linearGradient = defs.append("linearGradient")
+        .attr("id", "linear-gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%");
+
+    //Set the color for the start (0%)
+    linearGradient.append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", color_sequential(min_tonnes));
+
+    //Set the color for the end (100%)
+    linearGradient.append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", color_sequential(max_tonnes))
+
+    const legend = svg.append("g");
+
+    legend
+        .append('rect')
+        .attr("width", 300)
+        .attr("height", 10)
+        .attr("x", 350)
+        .attr("y", 25)
+        .attr('fill', "url(#linear-gradient)")
+
+    legend
+        .append("text")
+            .text('Legend')
+            .attr("style", "underlined")
+            .attr("x", 460)
+            .attr("y", 18)
+
+    legend
+        .append("text")
+            .attr("font-size", "12px")
+            .text(max_tonnes)
+            .attr("x", 630)
+            .attr("y", 18)
+
+    legend
+        .append("text")
+            .attr("font-size", "12px")
+            .text(min_tonnes)
+            .attr("x", 340)
+            .attr("y", 18)
+
+
+    //----------------------------------------------------------//
+    // Instructions
+
+    const tutorial = svg.append("g");
+
+    tutorial.append("text")
+        .style("font-size", "18px")
+        .style("font-weight", 700)
+        .style('color', 'black')
+        .text('Instructions')
+        .attr("width", 20)
+        .attr("height", 30)
+        .attr("x", 600)
+
+
+        
+    //----------------------------------------------------------//
+    // Mouse over function
 
     countries_group
         .selectAll('path')

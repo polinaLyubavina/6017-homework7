@@ -12,9 +12,9 @@ async function buildVis2(country_name) {
     d3.select("#visualization2").html('');
 
     // set the dimensions and margins of the mini graph
-    var width = 650;
+    var width = 670;
     var height = 250;
-    var margin = {top: 50, right: 250, bottom: 30, left: 60},
+    var margin = {top: 50, right: 250, bottom: 110, left: 60},
         width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
 
@@ -31,20 +31,17 @@ async function buildVis2(country_name) {
             .style("font-size", "18px")
             .style("font-weight", 700)
             .text(country_name);
-
-    // //Add country name to graph
-    // const graph_title = d3.select("#graph-title")
             
     //Import wine data
     const wine_production = await d3.csv('wine-production.csv');
     const country_wine_production = wine_production.filter((row) => row.Entity === country_name);
     //Gives an array of all the tonnes amounts 
     const tonnes = wine_production.map((row) => parseInt(row.tonnes));
-    // ... spreads the array to get the number we want
+    // '...' spreads the array to get the number we want
     const max_tonnes = Math.max(...tonnes);
     const min_tonnes = Math.min(...tonnes);
 
-    // Add X axis --> it is a date format
+    // Add X axis and date format
     const x = d3.scaleLinear()
         .domain([1961,2014])
         .range([ 0, width ]);
@@ -76,26 +73,27 @@ async function buildVis2(country_name) {
             .attr('r', 8.5)
             .style("opacity", 0)
 
-    // Create the text that travels along the curve of chart
+    // Create the text that travels along the curve of line
     var focusText = mini_graph
         .append('g')
         .append('text')
             .style("opacity", 0)
             .attr("text-anchor", "left")
             .attr("alignment-baseline", "middle")
+            .style("font-size", "12px")
 
     // Add the line
     mini_graph.append("path")
         .datum(country_wine_production)
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
+        .attr("stroke", "purple")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
             .x(function(d) { return x(d.Year) })
             .y(function(d) { return y(d.tonnes) })
         )
 
-    // What happens when the mouse move -> show the annotations at the right positions.
+    // Show line graph the annotations at the right positions.
     function mouseover() {
         focus.style("opacity", 1)
         focusText.style("opacity",1)
