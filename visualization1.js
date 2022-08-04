@@ -13,7 +13,7 @@ async function buildVis1() {
 
     //create SVG
     const width = 1000;
-    const height = 450;
+    const height = 500;
 
     // append the svg object to the body of the page
     const svg = d3.select('#visualization1')
@@ -93,49 +93,39 @@ async function buildVis1() {
 
     const legend = svg.append("g");
 
+    // Location of legend
     legend
         .append('rect')
         .attr("width", 300)
         .attr("height", 10)
         .attr("x", 350)
-        .attr("y", 25)
+        .attr("y", 70)
         .attr('fill', "url(#linear-gradient)")
 
+    // "Legend"
     legend
         .append("text")
             .text('Legend')
             .attr("style", "underlined")
             .attr("x", 460)
-            .attr("y", 18)
+            .attr("y", 55)
 
+    // "Max"
     legend
         .append("text")
             .attr("font-size", "12px")
             .text(max_tonnes)
             .attr("x", 630)
-            .attr("y", 18)
+            .attr("y", 65)
 
+    // "Min"
     legend
         .append("text")
             .attr("font-size", "12px")
             .text(min_tonnes)
             .attr("x", 340)
-            .attr("y", 18)
+            .attr("y", 65)
 
-
-    //----------------------------------------------------------//
-    // Instructions
-
-    const tutorial = svg.append("g");
-
-    tutorial.append("text")
-        .style("font-size", "18px")
-        .style("font-weight", 700)
-        .style('color', 'black')
-        .text('Instructions')
-        .attr("width", 20)
-        .attr("height", 30)
-        .attr("x", 600)
 
 
         

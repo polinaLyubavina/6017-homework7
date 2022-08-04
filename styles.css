@@ -7,6 +7,10 @@ body {
     font-family: 'Libre Baskerville';
 }
 
+p {
+    text-align: left;
+}
+
 .clicked {
     stroke-width: 3px;
 }
@@ -16,6 +20,11 @@ h1 {
 }
 
 #visualization1 {
+    display: block;
+    margin: auto;
+}
+
+#visualization2 {
     display: block;
     margin: auto;
 }

@@ -12,9 +12,9 @@ async function buildVis2(country_name) {
     d3.select("#visualization2").html('');
 
     // set the dimensions and margins of the mini graph
-    var width = 670;
-    var height = 250;
-    var margin = {top: 50, right: 250, bottom: 110, left: 60},
+    var width = 600;
+    var height = 160;
+    var margin = {top: 50, right: 120, bottom: 20, left: 100},
         width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
 
@@ -74,8 +74,17 @@ async function buildVis2(country_name) {
             .style("opacity", 0)
 
     // Create the text that travels along the curve of line
-    var focusText = mini_graph
+    var text_group = mini_graph
         .append('g')
+
+    var focusText = text_group
+        .append('text')
+            .style("opacity", 0)
+            .attr("text-anchor", "left")
+            .attr("alignment-baseline", "middle")
+            .style("font-size", "12px")
+
+    var focusText2 = text_group
         .append('text')
             .style("opacity", 0)
             .attr("text-anchor", "left")
@@ -97,6 +106,7 @@ async function buildVis2(country_name) {
     function mouseover() {
         focus.style("opacity", 1)
         focusText.style("opacity",1)
+        focusText2.style("opacity",1)
     }
 
     function mousemove(event) {
@@ -107,14 +117,19 @@ async function buildVis2(country_name) {
             .attr("cx", x(selectedData.Year))
             .attr("cy", y(selectedData.tonnes))
         focusText
-            .html("Year:" + selectedData.Year + "  -  " + "tonnes:" + selectedData.tonnes)
+            .html("Year:" + selectedData.Year)
             .attr("x", x(selectedData.Year)+15)
             .attr("y", y(selectedData.tonnes))
+        focusText2
+            .html("tonnes:" + selectedData.tonnes)
+            .attr("x", x(selectedData.Year)+15)
+            .attr("y", y(selectedData.tonnes)+15)
     }
 
     function mouseout() {
         focus.style("opacity", 0)
         focusText.style("opacity", 0)
+        focusText2.style("opacity", 0)
     }
 
     // Create a rect on top of the svg area: this rectangle recovers mouse position
