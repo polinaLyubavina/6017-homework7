@@ -14,7 +14,7 @@ async function buildVis2(country_name) {
     // set the dimensions and margins of the mini graph
     var width = 600;
     var height = 200;
-    var margin = {top: 50, right: 120, bottom: 20, left: 100},
+    var margin = {top: 50, right: 120, bottom: 40, left: 100},
         width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
 
@@ -53,6 +53,8 @@ async function buildVis2(country_name) {
     mini_graph.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(x_axis);
+    mini_graph.append('text').html('years').attr('x', 150).attr('y', 145).style("font-size", "10px")
+
 
     // Add Y axis
     const y = d3.scaleLinear()
@@ -60,6 +62,7 @@ async function buildVis2(country_name) {
         .range([ height, 0 ]);
     
     mini_graph.append("g").call(d3.axisLeft(y));
+    mini_graph.append('text').html('tonnes').attr('x', -80).attr('y', -75).attr('transform', 'rotate(-90)').style("font-size", "10px")
 
     // This allows to find the closest X index of the mouse:
     const bisect = d3.bisector(function(d) { return d.x_axis; }).left;
