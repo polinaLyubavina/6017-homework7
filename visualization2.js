@@ -53,7 +53,7 @@ async function buildVis2(country_name) {
     mini_graph.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(x_axis);
-    mini_graph.append('text').html('years').attr('x', 150).attr('y', 145).style("font-size", "10px")
+    mini_graph.append('text').html('year').attr('x', 150).attr('y', 145).style("font-size", "10px")
 
 
     // Add Y axis
