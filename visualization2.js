@@ -13,7 +13,7 @@ async function buildVis2(country_name) {
 
     // set the dimensions and margins of the mini graph
     var width = 600;
-    var height = 160;
+    var height = 200;
     var margin = {top: 50, right: 120, bottom: 20, left: 100},
         width = width - margin.left - margin.right,
         height = height - margin.top - margin.bottom;
@@ -73,9 +73,27 @@ async function buildVis2(country_name) {
             .attr('r', 8.5)
             .style("opacity", 0)
 
+    // Add the line
+    mini_graph.append("path")
+        .datum(country_wine_production)
+        .attr("fill", "none")
+        .attr("stroke", "purple")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+            .x(function(d) { return x(d.Year) })
+            .y(function(d) { return y(d.tonnes) })
+        )
+
     // Create the text that travels along the curve of line
     var text_group = mini_graph
         .append('g')
+
+    var focusTextBox = text_group
+        .append('rect')
+            .attr("width", 120)
+            .attr("height", 40)
+            .style("opacity", 0)
+            .attr("fill", "white")
 
     var focusText = text_group
         .append('text')
@@ -91,22 +109,12 @@ async function buildVis2(country_name) {
             .attr("alignment-baseline", "middle")
             .style("font-size", "12px")
 
-    // Add the line
-    mini_graph.append("path")
-        .datum(country_wine_production)
-        .attr("fill", "none")
-        .attr("stroke", "purple")
-        .attr("stroke-width", 1.5)
-        .attr("d", d3.line()
-            .x(function(d) { return x(d.Year) })
-            .y(function(d) { return y(d.tonnes) })
-        )
-
     // Show line graph the annotations at the right positions.
     function mouseover() {
         focus.style("opacity", 1)
         focusText.style("opacity",1)
         focusText2.style("opacity",1)
+        focusTextBox.style("opacity", .83)
     }
 
     function mousemove(event) {
@@ -119,17 +127,21 @@ async function buildVis2(country_name) {
         focusText
             .html("Year:" + selectedData.Year)
             .attr("x", x(selectedData.Year)+15)
-            .attr("y", y(selectedData.tonnes))
+            .attr("y", y(selectedData.tonnes)-35)
         focusText2
             .html("tonnes:" + selectedData.tonnes)
             .attr("x", x(selectedData.Year)+15)
-            .attr("y", y(selectedData.tonnes)+15)
+            .attr("y", y(selectedData.tonnes)-20)
+        focusTextBox
+            .attr("x", x(selectedData.Year)+15)
+            .attr("y", y(selectedData.tonnes)-50)
     }
 
     function mouseout() {
         focus.style("opacity", 0)
         focusText.style("opacity", 0)
         focusText2.style("opacity", 0)
+        focusTextBox.style("opacity", 0)
     }
 
     // Create a rect on top of the svg area: this rectangle recovers mouse position
