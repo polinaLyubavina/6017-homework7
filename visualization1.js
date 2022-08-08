@@ -1,7 +1,3 @@
-//Group Names: Anirudh Lath & Polina Lyubavina
-//uids: u1149016 & u0895721
-//Project: HW 7 Global Wine Production
-//Class: 6017-001 Data Analytics & Visualization
 
 //MAP VISUALIZATION
 
